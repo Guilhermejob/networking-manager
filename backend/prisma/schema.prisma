@@ -4,42 +4,47 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Intention {
-  id          String          @id @default(cuid())
+  id          Int       @id @default(autoincrement())
   name        String
-  email       String
+  email       String    @unique
   phone       String?
   message     String?
-  status      IntentionStatus @default(PENDING)
-  createdAt   DateTime        @default(now())
+  createdAt   DateTime  @default(now())
+  status      String    @default("pending")
   processedAt DateTime?
   processedBy String?
-  invitation  Invitation?
+
+  invitations Invitation[]
 }
 
 model Invitation {
-  id          String   @id @default(cuid())
-  token       String   @unique
-  intentionId String   @unique
-  createdAt   DateTime @default(now())
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
+  intentionId Int // 🔹 corrigido para Int (antes era String)
+  memberId    String? // 🔹 campo adicionado (faltava)
+  createdAt   DateTime  @default(now())
   expiresAt   DateTime?
-  used        Boolean  @default(false)
-  Intention   Intention @relation(fields: [intentionId], references: [id])
-  member      Member?
+  used        Boolean   @default(false)
+
+  Intention Intention @relation(fields: [intentionId], references: [id])
+  member    Member?   @relation(fields: [memberId], references: [id])
 }
 
 model Member {
-  id                     String        @id @default(cuid())
-  name                   String
-  email                  String        @unique
-  phone                  String?
-  joinedAt               DateTime      @default(now())
-  sentIndications        Indication[]  @relation("sent")
-  receivedIndications    Indication[]  @relation("received")
+  id                  String       @id @default(cuid())
+  name                String
+  email               String       @unique
+  phone               String?
+  joinedAt            DateTime     @default(now())
+  sentIndications     Indication[] @relation("sent")
+  receivedIndications Indication[] @relation("received")
+
+  invitations Invitation[] // 🔹 relação inversa com Invitation
 }
 
 model Indication {
