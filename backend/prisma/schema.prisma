@@ -8,3 +8,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Intention {
+  id          String          @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  message     String?
+  status      IntentionStatus @default(PENDING)
+  createdAt   DateTime        @default(now())
+  processedAt DateTime?
+  processedBy String?
+  invitation  Invitation?
+}
+
+model Invitation {
+  id          String   @id @default(cuid())
+  token       String   @unique
+  intentionId String   @unique
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime?
+  used        Boolean  @default(false)
+  Intention   Intention @relation(fields: [intentionId], references: [id])
+  member      Member?
+}
+
+model Member {
+  id                     String        @id @default(cuid())
+  name                   String
+  email                  String        @unique
+  phone                  String?
+  joinedAt               DateTime      @default(now())
+  sentIndications        Indication[]  @relation("sent")
+  receivedIndications    Indication[]  @relation("received")
+}
+
+model Indication {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  status      IndicationStatus @default(PENDING)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  fromId      String
+  toId        String
+  from        Member           @relation("sent", fields: [fromId], references: [id])
+  to          Member           @relation("received", fields: [toId], references: [id])
+}
+
+enum IntentionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum IndicationStatus {
+  PENDING
+  CONTACTED
+  CLOSED
+  REJECTED
+}
