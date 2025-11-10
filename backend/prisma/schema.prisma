@@ -23,10 +23,10 @@ model Intention {
 }
 
 model Invitation {
-  id          Int       @id @default(autoincrement())
+  id          String           @id @default(cuid())
   token       String    @unique
-  intentionId Int // 🔹 corrigido para Int (antes era String)
-  memberId    String? // 🔹 campo adicionado (faltava)
+  intentionId Int  
+  memberId    String? 
   createdAt   DateTime  @default(now())
   expiresAt   DateTime?
   used        Boolean   @default(false)
@@ -71,4 +71,21 @@ enum IndicationStatus {
   CONTACTED
   CLOSED
   REJECTED
+}
+
+
+model Notice {
+  id          String           @id @default(cuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  author    String   
+}
+
+model Checkin {
+  id          String           @id @default(cuid())
+  memberId  String
+  date      DateTime @default(now())
+  meetingId Int?
+  member    Member   @relation(fields: [memberId], references: [id])
 }
