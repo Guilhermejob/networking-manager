@@ -44,7 +44,7 @@ model Member {
   sentIndications     Indication[] @relation("sent")
   receivedIndications Indication[] @relation("received")
   invitations         Invitation[]
-  checkins            Checkin[]
+  engagements         Engagement[]
 }
 
 model Indication {
@@ -81,10 +81,21 @@ model Notice {
   author    String
 }
 
-model Checkin {
-  id        String   @id @default(cuid())
-  memberId  String
-  date      DateTime @default(now())
-  meetingId Int?
-  member    Member   @relation(fields: [memberId], references: [id])
+model Engagement {
+  id         String          @id @default(cuid())
+  memberId   String
+  type       EngagementType  @default(CHECKIN)
+  meetingId  Int?
+  relatedId  String?         // Pode referenciar Notice ou Indication
+  metadata   Json?
+  createdAt  DateTime        @default(now())
+
+  member     Member          @relation(fields: [memberId], references: [id])
+}
+
+enum EngagementType {
+  CHECKIN
+  INDICATION_SENT
+  INDICATION_RECEIVED
+  NOTICE_READ
 }
