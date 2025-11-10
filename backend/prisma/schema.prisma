@@ -88,10 +88,9 @@ model Engagement {
   type       EngagementType  @default(CHECKIN)
   meetingId  Int?
   relatedId  String?         // Pode referenciar Notice ou Indication
-  metadata   Json?
   createdAt  DateTime        @default(now())
-
-  member     Member          @relation(fields: [memberId], references: [id])
+  description String?
+  member     Member          @relation(fields: [memberId], references: [id], onDelete: Cascade)
 }
 
 enum EngagementType {

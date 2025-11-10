@@ -1,15 +1,18 @@
 import request from "supertest";
-import { PrismaClient,EngagementType } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import app from "../../src/app";
-
-
+import { cleanDatabase } from "../utils/cleanDatabase";
 
 const prisma = new PrismaClient();
 
 describe('Engagement Controller', () => {
   beforeEach(async () => {
-    await prisma.engagement.deleteMany();
-    await prisma.member.deleteMany();
+    await cleanDatabase();
+  });
+
+  
+  afterAll(async () => {
+    await prisma.$disconnect();
   });
 
   it('should create a check-in engagement', async () => {

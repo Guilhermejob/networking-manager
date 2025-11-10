@@ -25,6 +25,8 @@ export class IndicationService {
       throw new Error("Membro remetente ou destinatário não encontrado.");
     }
 
+    if (fromId === toId) throw new Error('Um membro não pode indicar a si mesmo');
+
     return prisma.indication.create({
       data: {
         title,

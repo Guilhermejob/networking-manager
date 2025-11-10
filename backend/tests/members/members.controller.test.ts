@@ -1,12 +1,18 @@
 import request from "supertest";
 import { PrismaClient } from '@prisma/client';
 import app from "../../src/app";
+import { cleanDatabase } from "../utils/cleanDatabase";
 
 const prisma = new PrismaClient();
 
 describe('Members Controller', () => {
   beforeEach(async () => {
-    await prisma.member.deleteMany();
+    await  cleanDatabase()
+  });
+
+  
+  afterAll(async () => {
+    await prisma.$disconnect();
   });
 
   it('should create a member', async () => {

@@ -13,6 +13,7 @@ export class IndicationController {
       const indication = await service.createIndication({ title, description, fromId, toId })
       return res.status(201).json(indication)
     } catch (error: any) {
+      console.error('Erro ao criar indicação:', error.message);
       return res.status(400).json({ error: error.message })
     }
   }

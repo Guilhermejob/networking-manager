@@ -6,12 +6,9 @@ type EngagementCreate = {
   type: EngagementType
   createdAt?: Date
   meetingId?: number
-  // aceita `description`, será armazenado em `metadata`
-  description?: string
 }
 
 export async function createEngagement(data: EngagementCreate) {
-  // mapear description para metadata (campo Json no modelo Prisma)
   const createData: any = {
     memberId: data.memberId,
     type: data.type,
@@ -19,7 +16,6 @@ export async function createEngagement(data: EngagementCreate) {
 
   if (data.meetingId !== undefined) createData.meetingId = data.meetingId
   if (data.createdAt) createData.createdAt = data.createdAt
-  if (data.description !== undefined) createData.metadata = { description: data.description }
 
   return prisma.engagement.create({ data: createData })
 }
@@ -47,11 +43,10 @@ export async function update(id: string, data: Partial<{
     description?: string;
     points?: number;
   }>) {
-    // construir objeto de update sem campos desconhecidos
     const updateData: any = {}
     if (data.type !== undefined) updateData.type = data.type
     if ((data as any).points !== undefined) updateData.points = (data as any).points
-    if (data.description !== undefined) updateData.metadata = { description: data.description }
+    if (data.description !== undefined) updateData.description = data.description 
 
     return prisma.engagement.update({
       where: { id },

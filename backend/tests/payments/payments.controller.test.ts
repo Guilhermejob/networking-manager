@@ -1,13 +1,19 @@
 import request from "supertest";
 import { PrismaClient } from '@prisma/client';
 import app from "../../src/app";
+import { cleanDatabase } from "../utils/cleanDatabase";
 
 const prisma = new PrismaClient();
 
 describe('Payments Controller', () => {
   beforeEach(async () => {
-    await prisma.payment.deleteMany();
-    await prisma.member.deleteMany();
+    await cleanDatabase()
+
+  });
+
+  
+  afterAll(async () => {
+    await prisma.$disconnect();
   });
 
   it('should create a payment record', async () => {
@@ -19,7 +25,6 @@ describe('Payments Controller', () => {
       memberId: member.id,
       amount: 150.0,
       dueDate: new Date().toISOString(),
-      status: 'PENDING',
     });
 
     expect(res.statusCode).toBe(201);
