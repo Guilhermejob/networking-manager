@@ -225,11 +225,3 @@ Exemplo request:
 - Sucesso: 200 — objeto com dados do dashboard
 
 ---
-
-## Observações finais / próximos passos
-- Seria ideal complementar a documentação com os esquemas (ex.: modelos Prisma / serviços) para descrever as formas exatas de resposta (tipos/atributos).
-- Podemos gerar automaticamente um OpenAPI/Swagger a partir dos controllers ou adicionar exemplos JSON mais precisos extraídos dos serviços.
-
----
-
-Arquivo gerado automaticamente a partir das rotas e controllers do projeto.
