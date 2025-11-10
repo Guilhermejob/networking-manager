@@ -6,6 +6,7 @@ import { IndicationService } from "../services/indications.service"
 const service = new IndicationService()
 
 export class IndicationController {
+  
   async createIndication(req: Request, res: Response) {
     try {
       const { title, description, fromId, toId } = req.body
