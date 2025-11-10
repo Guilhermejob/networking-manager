@@ -7,6 +7,7 @@ import adminRoutes from './routes/admin.routes';
 import noticesRoutes from './routes/notices.routes'
 import engagementRoutes from './routes/engagement.routes'
 import dashboardRoutes from './routes/dashboard.routes'
+import paymentRoutes from "./routes/payment.routes";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/notices", noticesRoutes)
 app.use("/admin", adminRoutes);
 app.use('/engagements', engagementRoutes)
 app.use('/dashboard', dashboardRoutes)
+app.use("/payments", paymentRoutes);
 
 //Rota base (teste rápido)
 app.get("/", (req: Request, res: Response) => {
