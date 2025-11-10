@@ -13,8 +13,6 @@ const router = Router()
 
 
 router.post("/intentions", createIntention)
-router.get("/intentions", listIntentions)
-router.post("/intentions/:intentionId/approve", approveIntention)
 router.get("/invitations/:token", verifyInvitationToken)
 router.post("/invitations/:token/complete", completeRegistration)
 
