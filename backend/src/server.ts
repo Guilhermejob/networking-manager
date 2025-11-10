@@ -1,26 +1,46 @@
-import express, { ErrorRequestHandler } from 'express';
-import cors from 'cors';
+import express, { Request, Response, NextFunction } from "express";
+import cors from "cors";
+import admissionRoutes from "./routes/admission.routes";
+//import membersRoutes from "./routes/members.routes"
+//import indicationsRoutes from './routes/indications.routes'
 
+const app = express();
 
-function createServer() {
+app.use(cors());
+app.use(express.json());
 
-    const app = express();
+//Rotas principais
+app.use("/admissions", admissionRoutes)
+//app.use("/members", membersRoutes)
+//app.use("/indications", indicationsRoutes)
 
-    app.use(cors());
-    app.use(express.json());
+//Rota base (teste rápido)
+app.get("/", (req: Request, res: Response) => {
+  res.send("🚀 API do sistema de admissões está rodando!");
+});
 
-    app.get('/', (_req, res) => {
-        res.send('Ta rodando!');
-    });
+//Middleware 404 - Rota não encontrada
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    message: "Rota não encontrada",
+    path: req.originalUrl,
+  });
+});
 
-    const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-        console.error(err);
-        res.status(500).json({ message: 'Internal Server Error' });
-    };
-    app.use(errorHandler);
+//Middleware global de tratamento de erros
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error("Erro capturado:", err);
 
-    return app;
-}
+  const status = err.status || 500;
+  const message = err.message || "Erro interno do servidor";
 
+  res.status(status).json({
+    message,
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+  });
+});
 
-export default createServer;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Servidor rodando na porta ${PORT}`);
+});
