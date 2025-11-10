@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import admissionRoutes from "./routes/admission.routes";
 import membersRoutes from "./routes/members.routes"
-//import indicationsRoutes from './routes/indications.routes'
+import indicationsRoutes from './routes/indications.routes'
 
 const app = express();
 
@@ -12,7 +12,7 @@ app.use(express.json());
 //Rotas principais
 app.use("/admissions", admissionRoutes)
 app.use("/members", membersRoutes)
-//app.use("/indications", indicationsRoutes)
+app.use("/indications", indicationsRoutes)
 
 //Rota base (teste rápido)
 app.get("/", (req: Request, res: Response) => {
