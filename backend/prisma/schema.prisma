@@ -45,6 +45,7 @@ model Member {
   receivedIndications Indication[] @relation("received")
   invitations         Invitation[]
   engagements         Engagement[]
+  payment             Payment[]
 }
 
 model Indication {
@@ -98,4 +99,23 @@ enum EngagementType {
   INDICATION_SENT
   INDICATION_RECEIVED
   NOTICE_READ
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  memberId    String
+  amount      Float
+  dueDate     DateTime
+  paidAt      DateTime?
+  status      PaymentStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+
+  member      Member        @relation(fields: [memberId], references: [id])
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
 }
