@@ -10,7 +10,8 @@ import {
 export async function createEngagementController(req: Request, res: Response) {
   try {
     const engagement = await createEngagement(req.body)
-    res.status(201).json(engagement)
+    const out = { ...engagement, description: (engagement as any).metadata?.description }
+    res.status(201).json(out)
   } catch (error) {
     console.error(error)
     res.status(400).json({ message: 'Erro ao criar engagement' })
@@ -20,7 +21,8 @@ export async function createEngagementController(req: Request, res: Response) {
 export async function listEngagementsController(req: Request, res: Response) {
   try {
     const engagements = await listEngagements()
-    res.status(200).json(engagements)
+    const out = engagements.map(e => ({ ...e, description: (e as any).metadata?.description }))
+    res.status(200).json(out)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Erro ao listar engagements' })
@@ -30,7 +32,8 @@ export async function listEngagementsController(req: Request, res: Response) {
 export async function updateEngagamentController(req: Request, res: Response) {
     try {
       const engagement = await update(req.params.id, req.body);
-      res.json(engagement);
+      const out = { ...engagement, description: (engagement as any).metadata?.description }
+      res.json(out);
     } catch (error) {
       res.status(400).json({ error: (error as Error).message });
     }
@@ -42,7 +45,8 @@ export async function getEngagementByIdController(req: Request, res: Response) {
     if (!engagement) {
       return res.status(404).json({ message: 'Engagement não encontrado' })
     }
-    res.status(200).json(engagement)
+    const out = { ...engagement, description: (engagement as any).metadata?.description }
+    res.status(200).json(out)
   } catch (error) {
     console.error(error)
     res.status(500).json({ message: 'Erro ao buscar engagement' })

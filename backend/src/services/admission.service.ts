@@ -1,7 +1,8 @@
 import { prisma } from '../prismaClient'
-import { nanoid } from "nanoid"
 import { sendInvitationEmail } from "../utils/emailSimulator"
-import { send } from 'process';
+
+import { customAlphabet } from "nanoid/non-secure";
+const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10);
 
 
 type IntentionCreate = {

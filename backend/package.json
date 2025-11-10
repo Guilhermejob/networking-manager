@@ -2,14 +2,14 @@
   "name": "networking-manager-backend",
   "version": "1.0.0",
   "description": "Backend for Networking Manager challenge (Express + TypeScript + Prisma)",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
-    "test": "cross-env NODE_ENV=test jest --runInBand"
+    "test": "cross-env NODE_ENV=test dotenv -e .env.test jest --runInBand --detectOpenHandles --forceExit"
   },
   "author": "",
   "license": "MIT",
@@ -27,6 +27,8 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^20.4.1",
     "@types/supertest": "^6.0.3",
+    "cross-env": "^10.1.0",
+    "dotenv-cli": "^11.0.0",
     "jest": "^29.7.0",
     "prisma": "^5.0.0",
     "supertest": "^6.3.4",
