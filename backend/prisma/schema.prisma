@@ -23,10 +23,10 @@ model Intention {
 }
 
 model Invitation {
-  id          String           @id @default(cuid())
+  id          String    @id @default(cuid())
   token       String    @unique
-  intentionId Int  
-  memberId    String? 
+  intentionId Int
+  memberId    String?
   createdAt   DateTime  @default(now())
   expiresAt   DateTime?
   used        Boolean   @default(false)
@@ -43,8 +43,8 @@ model Member {
   joinedAt            DateTime     @default(now())
   sentIndications     Indication[] @relation("sent")
   receivedIndications Indication[] @relation("received")
-
-  invitations Invitation[] // 🔹 relação inversa com Invitation
+  invitations         Invitation[]
+  checkins            Checkin[]
 }
 
 model Indication {
@@ -73,17 +73,16 @@ enum IndicationStatus {
   REJECTED
 }
 
-
 model Notice {
-  id          String           @id @default(cuid())
+  id        String   @id @default(cuid())
   title     String
   content   String
   createdAt DateTime @default(now())
-  author    String   
+  author    String
 }
 
 model Checkin {
-  id          String           @id @default(cuid())
+  id        String   @id @default(cuid())
   memberId  String
   date      DateTime @default(now())
   meetingId Int?

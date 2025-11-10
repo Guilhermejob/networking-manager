@@ -4,6 +4,8 @@ import admissionRoutes from "./routes/admission.routes";
 import membersRoutes from "./routes/members.routes"
 import indicationsRoutes from './routes/indications.routes'
 import adminRoutes from './routes/admin.routes';
+import noticesRoutes from './routes/notices.routes'
+import checkinsRoutes from './routes/checkins.routes'
 
 const app = express();
 
@@ -14,7 +16,9 @@ app.use(express.json());
 app.use("/admissions", admissionRoutes)
 app.use("/members", membersRoutes)
 app.use("/indications", indicationsRoutes)
-app.use('/admin', adminRoutes);
+app.use("/notices", noticesRoutes)
+app.use("/admin", adminRoutes);
+app.use('/checkins', checkinsRoutes)
 
 //Rota base (teste rápido)
 app.get("/", (req: Request, res: Response) => {
