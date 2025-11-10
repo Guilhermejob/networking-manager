@@ -5,7 +5,8 @@ import membersRoutes from "./routes/members.routes"
 import indicationsRoutes from './routes/indications.routes'
 import adminRoutes from './routes/admin.routes';
 import noticesRoutes from './routes/notices.routes'
-import checkinsRoutes from './routes/checkins.routes'
+import engagementRoutes from './routes/engagement.routes'
+import dashboardRoutes from './routes/dashboard.routes'
 
 const app = express();
 
@@ -18,7 +19,8 @@ app.use("/members", membersRoutes)
 app.use("/indications", indicationsRoutes)
 app.use("/notices", noticesRoutes)
 app.use("/admin", adminRoutes);
-app.use('/checkins', checkinsRoutes)
+app.use('/engagements', engagementRoutes)
+app.use('/dashboard', dashboardRoutes)
 
 //Rota base (teste rápido)
 app.get("/", (req: Request, res: Response) => {
