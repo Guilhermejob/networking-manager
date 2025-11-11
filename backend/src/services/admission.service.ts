@@ -45,6 +45,31 @@ export async function approveIntention(intentionId: number, opts: { expireInDays
   return { intention, invitation }
 }
 
+export async function rejectIntention(intentionId: number, opts: { expireInDays?: number }) {
+
+  const intention = await prisma.intention.findUnique({ where: { id: intentionId } })
+
+  if (!intention) throw new Error('Intention not found')
+  if (intention.status == 'REJECTED') throw new Error('Intention already REJECTED')
+
+  await prisma.intention.update({
+    where: { id: intentionId },
+    data: { status: 'REJECTED', processedAt: new Date(), processedBy: 'system' },
+  })
+
+  const token = nanoid(32);
+
+  const expiresAt = opts.expireInDays ? new Date(Date.now() + opts.expireInDays * 24 * 3600 * 1000) : null
+
+  const invitation = await prisma.invitation.create({
+    data: { token, intentionId: intentionId, expiresAt: expiresAt ?? undefined }
+  })
+
+  sendInvitationEmail(intention.email, { token: invitation.token, expiresAt })
+
+  return { intention, invitation }
+}
+
 export async function verifyInvitationToken(token: string) {
 
   const inv = await prisma.invitation.findUnique({ where: { token }, include: { Intention: true, member: true } })
@@ -75,3 +100,5 @@ export async function completeRegistration(token: string, data: { name: string; 
 
   return member
 }
+
+

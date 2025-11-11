@@ -22,6 +22,7 @@ export async function create(req: Request, res: Response) {
 export async function list(req: Request, res: Response) {
     try {
         const members = await MemberService.listMembers()
+        console.log(members, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
         return res.status(200).json(members)
 
     } catch (error) {
