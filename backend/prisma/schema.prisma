@@ -4,7 +4,117 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+model Intention {
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  phone       String?
+  message     String?
+  createdAt   DateTime  @default(now())
+  status      String    @default("pending")
+  processedAt DateTime?
+  processedBy String?
+
+  invitations Invitation[]
+}
+
+model Invitation {
+  id          String    @id @default(cuid())
+  token       String    @unique
+  intentionId Int
+  memberId    String?
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  used        Boolean   @default(false)
+
+  Intention Intention @relation(fields: [intentionId], references: [id])
+  member    Member?   @relation(fields: [memberId], references: [id])
+}
+
+model Member {
+  id                  String       @id @default(cuid())
+  name                String
+  email               String       @unique
+  phone               String?
+  joinedAt            DateTime     @default(now())
+  sentIndications     Indication[] @relation("sent")
+  receivedIndications Indication[] @relation("received")
+  invitations         Invitation[]
+  engagements         Engagement[]
+  payment             Payment[]
+}
+
+model Indication {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  status      IndicationStatus @default(PENDING)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  fromId      String
+  toId        String
+  from        Member           @relation("sent", fields: [fromId], references: [id])
+  to          Member           @relation("received", fields: [toId], references: [id])
+}
+
+enum IntentionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum IndicationStatus {
+  PENDING
+  CONTACTED
+  CLOSED
+  REJECTED
+}
+
+model Notice {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  author    String
+}
+
+model Engagement {
+  id         String          @id @default(cuid())
+  memberId   String
+  type       EngagementType  @default(CHECKIN)
+  meetingId  Int?
+  relatedId  String?         // Pode referenciar Notice ou Indication
+  createdAt  DateTime        @default(now())
+  description String?
+  member     Member          @relation(fields: [memberId], references: [id], onDelete: Cascade)
+}
+
+enum EngagementType {
+  CHECKIN
+  INDICATION_SENT
+  INDICATION_RECEIVED
+  NOTICE_READ
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  memberId    String
+  amount      Float
+  dueDate     DateTime
+  paidAt      DateTime?
+  status      PaymentStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+
+  member      Member        @relation(fields: [memberId], references: [id])
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
