@@ -39,8 +39,6 @@ export async function approveIntention(req: Request, res: Response) {
         const webUrl = process.env.FRONT_URL || "http://localhost:5173";
         const inviteLink = `${webUrl}/invite?token=${result.invitation.token}`;
 
-        console.log(inviteLink ,  "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
-
         return res.status(200).json({
             message: "Intenção aprovada com sucesso",
             token: result.invitation.token,

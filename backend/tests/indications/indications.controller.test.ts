@@ -25,7 +25,6 @@ describe('Indications Controller', () => {
       toId: to.id,
     });
 
-    console.log(res.body);
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('id');
