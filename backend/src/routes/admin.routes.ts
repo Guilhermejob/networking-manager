@@ -8,8 +8,6 @@ const router = Router()
 router.post('/login', (req: Request, res: Response) => {
   const { key } = req.body
   const adminKey = process.env.ADMIN_KEY
-  console.log(adminKey, '.env')
-  console.log(key, 'req.body')
 
   if (!adminKey) {
     return res.status(500).json({ message: 'ADMIN_KEY não configurada no ambiente' })
